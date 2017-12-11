@@ -1,0 +1,39 @@
+<form [formGroup]="formModel" (submit)="onSubmit()">
+  <div>
+    用户名：<input formControlName="username" type="text"/>
+    <!-- 表弟那校验通过的  或者 用户没有获取过焦点的时候 就隐藏-->
+    <div [hidden]="this.formModel.get('username').valid  || this.formModel.get('username').untouched">
+      <div [hidden]="!this.formModel.hasError('required', 'username')">用户名是必填项</div>
+      <div [hidden]="!this.formModel.hasError('minlength', 'username')">用户名a最小长度是6</div>
+    </div>
+  </div>
+  <div formGroupName="passwordsGroup">
+    <div>
+      密码：<input formControlName="password" type="text"/>
+    </div>
+    <!-- dirty（脏） 修改过TRUE  未修改过  FALSE   pristine刚好相反-->
+    <div>密码是否修改过：{{this.formModel.get('passwordsGroup').get('password').dirty}}</div>
+    <div [hidden]="!this.formModel.hasError('minlength', ['passwordsGroup', 'password'])">最小长度不对</div>
+    <div>
+      确认密码：<input formControlName="pconfire" type="text"/>
+    </div>
+    <div [hidden]="!this.formModel.hasError('eq', 'passwordsGroup')">
+      <!-- 自定义的校验器 返回信息为{eq:{desc:'密码不匹配'}}-->
+      {{this.formModel.getError('eq', 'passwordsGroup')?.desc}}
+    </div>
+  </div>
+  <ul formArrayName="mobiles">
+    <li *ngFor="let m of this.formModel.get('mobiles').controls;let i=index;">
+      电话：<input [formControlName]="i" type="text"/>
+      <div [hidden]="!this.formModel.hasError('mobile', ['mobiles', i])">电话校验失败</div>
+      <!-- 异步校验提示信息-->
+      <div [hidden]="!this.formModel.get('mobiles').controls[i].pending">
+        正在异步校验手机合法性...
+      </div>
+    </li>
+  </ul>
+  <button type="button" (click)="addMobile()">增加电话</button>
+  <div>
+    <button type="submit">提交</button>
+  </div>
+</form>

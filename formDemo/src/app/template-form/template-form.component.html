@@ -1,0 +1,35 @@
+<!-- novalidate标示该form不要启动浏览器默认的校验-->
+<!-- 提交需要表单校验结果的话   那么需要传入结果给submit方法-->
+<form #myForm="ngForm" novalidate (ngSubmit)="onSubmit(myForm.value, myForm.valid)">
+  <div>
+    <!-- required Angular的必填校验的指令-->
+    用户名：<input ngModel required minlength="6" name="username" type="text" (input)="onUsernameInput(myForm)"/>
+  </div>
+  <div [hidden]="usernameValid  || usernameUnTouch">
+    <div [hidden]="!myForm.form.hasError('required', 'username')">用户名是必填项</div>
+    <div [hidden]="!myForm.form.hasError('minlength', 'username')">用户名a最小长度是6</div>
+  </div>
+  <div>
+    <!-- mobile 自定义的指令-->
+    手机号：<input ngModel required mobile name="mobile" type="text"/>
+  </div>
+  <div [hidden]="!myForm.form.hasError('mobile', ['mobiles', i])">电话校验失败</div>
+
+  <!-- equal 自定义的指令-->
+  <div ngModelGroup="passwordsGroup" equalValidator>
+    <div>
+      密码：<input ngModel required minlength="6" name="password" type="password"/>
+    </div>
+    <div [hidden]="!myForm.form.hasError('minlength', ['passwordsGroup', 'password'])">最小长度不对</div>
+    <div>
+      确认密码：<input ngModel required minlength="6" name="pconfire" type="password"/>
+    </div>
+  </div>
+  <div [hidden]="!myForm.form.hasError('eq', 'passwordsGroup')">
+    <!-- 自定义的校验器 返回信息为{eq:{desc:'密码不匹配'}}-->
+    {{myForm.form.getError('eq', 'passwordsGroup')?.desc}}
+  </div>
+  <div>
+    <button type="submit">提交</button>
+  </div>
+</form>

@@ -1,0 +1,22 @@
+<form [formGroup]="formModel" (submit)="onSubmit()">
+  <div>
+    用户名：<input formControlName="username" type="text"/>
+  </div>
+  <div formGroupName="passwordsGroup">
+    <div>
+      密码：<input formControlName="password" type="text"/>
+    </div>
+    <div>
+      确认密码：<input formControlName="pconfire" type="text"/>
+    </div>
+  </div>
+  <ul formArrayName="mobiles">
+    <li *ngFor="let m of this.formModel.get('mobiles').controls;let i=index;">
+      电话：<input [formControlName]="i" type="text"/>
+    </li>
+  </ul>
+  <button type="button" (click)="addMobile()">增加电话</button>
+  <div>
+    <button type="submit">提交</button>
+  </div>
+</form>
